@@ -1,0 +1,36 @@
+{
+  "name": "gym-log",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env.local --watch server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "preview": "npm run start",
+    "test": "node --test src/lib/*.test.ts server/*.test.ts",
+    "start": "node --env-file-if-exists=.env.local server/index.ts --production"
+  },
+  "dependencies": {
+    "@neondatabase/auth": "0.5.0-beta",
+    "@vercel/functions": "^3.9.5",
+    "express": "^5.2.1",
+    "jose": "^6.2.12",
+    "pg": "^8.23.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.1",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "~7.0.2",
+    "vite": "^8.2.2"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "projectName": "gym-log",
+  "projectId": "cool-mountain-36330352",
+  "organizationId": "org-green-hill-37570049",
+  "branchName": "main",
+  "branchId": "br-bold-rain-b3uoz5lx",
+  "databaseName": "gym_log",
+  "region": "aws-ap-southeast-1",
+  "postgresVersion": 18,
+  "initialMigration": "migrations/001_initial.sql",
+  "migrations": [
+    "migrations/001_initial.sql",
+    "migrations/002_user_workspaces.sql"
+  ],
+  "authProvider": "better_auth"
+}
