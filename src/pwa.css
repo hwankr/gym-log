@@ -1,0 +1,65 @@
+.pwa-notice {
+  position: fixed;
+  z-index: 40;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  width: min(370px, calc(100vw - 36px));
+  padding: 16px;
+  border: 1px solid #d6e3c6;
+  border-radius: 14px;
+  background: #f5f9ee;
+  box-shadow: 0 5px 24px #284d3c20;
+  color: #354d2d;
+  font-size: 13px;
+  line-height: 1.8;
+  word-break: keep-all;
+}
+.pwa-notice p + p {
+  margin-top: 10px;
+}
+.pwa-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.pwa-actions .button {
+  min-height: 44px;
+  font-size: 12px;
+}
+.pwa-install {
+  margin-top: 20px;
+  text-align: center;
+}
+.pwa-install .button {
+  width: 100%;
+  justify-content: center;
+}
+.pwa-install p {
+  color: #63745d;
+  font-size: 12px;
+  line-height: 1.9;
+}
+.auth-offline h2 {
+  font-size: 18px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+@media (max-width: 700px) {
+  .pwa-notice {
+    bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+  .topbar {
+    padding-top: env(safe-area-inset-top);
+    height: calc(65px + env(safe-area-inset-top));
+  }
+  .main-content {
+    padding-bottom: calc(98px + env(safe-area-inset-bottom));
+  }
+  .modal-header {
+    padding-top: calc(21px + env(safe-area-inset-top));
+  }
+  .auth-shell {
+    padding-top: max(40px, env(safe-area-inset-top));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+  }
+}

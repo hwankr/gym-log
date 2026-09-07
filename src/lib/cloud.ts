@@ -13,6 +13,9 @@ export class CloudError extends Error {
 }
 
 async function request(options?: RequestInit): Promise<CloudSnapshot> {
+  if (!navigator.onLine) {
+    throw new CloudError("오프라인이에요. 화면을 유지한 채 인터넷 연결 후 다시 저장하거나 불러와 주세요.", 0);
+  }
   let response: Response;
   try {
     response = await fetch("/api/data", {

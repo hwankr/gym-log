@@ -9,6 +9,7 @@ import Icon, { type IconName } from "./components/Icon";
 import Modal from "./components/Modal";
 import WorkoutEditor from "./components/WorkoutEditor";
 import AuthGate from "./components/AuthGate";
+import { PwaInstall, usePwa } from "./components/Pwa";
 import { CloudError, getCloudData, saveCloudData } from "./lib/cloud";
 import { legacyStorageStatus, mergeLegacyData } from "./lib/legacy";
 import {
@@ -136,6 +137,7 @@ function GymApp({
   const [storageError, setStorageError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { setUpdateBlocked } = usePwa();
   const [syncedAt, setSyncedAt] = useState<Date | null>(null);
   const [legacy, setLegacy] = useState(() => legacyStorageStatus(user.id));
   const savingRef = useRef(false);
@@ -151,6 +153,10 @@ function GymApp({
   const [weekOffset, setWeekOffset] = useState(0);
   const [today, setToday] = useState(localDate);
   const importRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    setUpdateBlocked(saving || dialog !== null);
+    return () => setUpdateBlocked(false);
+  }, [saving, dialog, setUpdateBlocked]);
   useEffect(() => {
     const sync = () => setPage(currentPage());
     window.addEventListener("hashchange", sync);
@@ -195,6 +201,7 @@ function GymApp({
     const refresh = () => {
       if (
         !dialog &&
+        navigator.onLine &&
         !savingRef.current &&
         document.visibilityState === "visible"
       )
@@ -202,9 +209,11 @@ function GymApp({
     };
     const interval = window.setInterval(refresh, 60_000);
     window.addEventListener("focus", refresh);
+    window.addEventListener("online", refresh);
     return () => {
       window.clearInterval(interval);
       window.removeEventListener("focus", refresh);
+      window.removeEventListener("online", refresh);
     };
   }, [dialog, refreshCloud]);
 
@@ -1409,6 +1418,7 @@ function GymApp({
                     : ""}
                 </small>
               </div>
+              <PwaInstall />
               <div className="account-actions">
                 <button
                   className="button button-secondary"

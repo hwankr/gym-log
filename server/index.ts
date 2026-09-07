@@ -11,7 +11,14 @@ const { app, pool, appOrigin } = createRuntime({ production, port });
 const httpServer = createServer(app);
 let closeVite: (() => Promise<void>) | undefined;
 if (production) {
-  app.use(express.static(resolve("dist"), { index: false }));
+  app.use(express.static(resolve("dist"), {
+    index: false,
+    setHeaders(res, path) {
+      if (path.endsWith('/sw.js') || path.endsWith('/manifest.webmanifest')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      }
+    },
+  }));
   app.get("/{*path}", (_req, res) => {
     res.sendFile(resolve("dist/index.html"));
   });

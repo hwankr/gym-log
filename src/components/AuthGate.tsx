@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { authClient } from "../lib/auth-client";
 import Icon from "./Icon";
+import { PwaInstall, usePwa } from "./Pwa";
+import { useOnline } from "../lib/online";
 import "../auth.css";
 
 type AuthSession = {
@@ -40,6 +42,8 @@ export default function AuthGate({
 }: {
   children: (session: AuthSession) => ReactNode;
 }) {
+  const online = useOnline();
+  const { setUpdateBlocked } = usePwa();
   const {
     data,
     isPending,
@@ -53,6 +57,17 @@ export default function AuthGate({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [invalidated, setInvalidated] = useState(false);
+
+  useEffect(() => {
+    setUpdateBlocked(busy || Boolean(password));
+    return () => setUpdateBlocked(false);
+  }, [busy, password, setUpdateBlocked]);
+
+  useEffect(() => {
+    const reconnect = () => { void refetch(); };
+    window.addEventListener("online", reconnect);
+    return () => window.removeEventListener("online", reconnect);
+  }, [refetch]);
 
   useEffect(() => {
     const handleExpired = () => {
@@ -141,7 +156,12 @@ export default function AuthGate({
           로그인하면 운동 기록과 루틴을 휴대폰과 PC에서 이어서 사용할 수 있어요.
         </p>
 
-        {isPending ? (
+        {!online ? (
+          <div className="auth-form auth-offline" role="status">
+            <h2>인터넷 연결을 기다리고 있어요</h2>
+            <p className="auth-description">Gym Log를 열었어요. 로그인과 기록 불러오기는 인터넷 연결 후 사용할 수 있어요. 연결되면 자동으로 다시 확인할게요.</p>
+          </div>
+        ) : isPending ? (
           <p className="auth-loading" role="status">
             로그인 상태를 확인하고 있어요…
           </p>
@@ -250,6 +270,7 @@ export default function AuthGate({
             </div>
           </>
         )}
+        <PwaInstall />
         <p className="auth-note">
           <Icon name="leaf" size={16} /> 어제보다 한 걸음 더.
         </p>
